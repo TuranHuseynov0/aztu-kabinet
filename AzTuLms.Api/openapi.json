@@ -1,0 +1,571 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "description": "Əvvəl POST /auth/login ilə universitet ID və şifrənlə daxil ol. Token server yaddaşında saxlanır və digər sorğulara avtomatik əlavə edilir. Authorize lazım deyil. Server yenidən başladıqda və ya 2 saatdan sonra yenidən giriş et.",
+    "title": "AzTU LMS — Lokal API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Giriş"
+        ],
+        "responses": {
+          "401": {
+            "description": "Giriş rədd edildi."
+          },
+          "502": {
+            "description": "Universitet API-si ilə əlaqə və ya cavab problemi."
+          },
+          "200": {
+            "description": "Giriş uğurludur; lokal sessiya cookie-si yaradıldı."
+          },
+          "403": {
+            "description": "Universitet əlavə brauzer yoxlaması tələb edə bilər."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "password": "Şifrəni daxil et",
+                "user_id": "ID-ni daxil et"
+              },
+              "schema": {
+                "properties": {
+                  "password": {
+                    "format": "password",
+                    "description": "Universitet şifrəsi",
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "description": "Universitet istifadəçi ID-si"
+                  }
+                },
+                "required": [
+                  "user_id",
+                  "password"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "summary": "Universitet hesabı ilə giriş"
+      }
+    },
+    "/auth/status": {
+      "get": {
+        "tags": [
+          "Giriş"
+        ],
+        "responses": {
+          "401": {
+            "description": "Əvvəl giriş et."
+          },
+          "429": {
+            "description": "Sorğu limiti."
+          },
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "JSON cavabı"
+          },
+          "403": {
+            "description": "Universitet girişi rədd etdi."
+          }
+        },
+        "summary": "Lokal giriş vəziyyəti"
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Sistem"
+        ],
+        "responses": {
+          "401": {
+            "description": "Əvvəl giriş et."
+          },
+          "429": {
+            "description": "Sorğu limiti."
+          },
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "JSON cavabı"
+          },
+          "403": {
+            "description": "Universitet girişi rədd etdi."
+          }
+        },
+        "summary": "Lokal serverin vəziyyəti"
+      }
+    },
+    "/api/lectures": {
+      "get": {
+        "tags": [
+          "Məlumatlar"
+        ],
+        "responses": {
+          "401": {
+            "description": "Əvvəl giriş et."
+          },
+          "429": {
+            "description": "Sorğu limiti."
+          },
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "JSON cavabı"
+          },
+          "403": {
+            "description": "Universitet girişi rədd etdi."
+          }
+        },
+        "summary": "Dərslərin siyahısı"
+      }
+    },
+    "/api/user-info": {
+      "get": {
+        "tags": [
+          "Məlumatlar"
+        ],
+        "responses": {
+          "401": {
+            "description": "Əvvəl giriş et."
+          },
+          "429": {
+            "description": "Sorğu limiti."
+          },
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "JSON cavabı"
+          },
+          "403": {
+            "description": "Universitet girişi rədd etdi."
+          }
+        },
+        "summary": "Öz hesabının məlumatları"
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Giriş"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lokal token və cookie-lər yaddaşdan silindi."
+          }
+        },
+        "summary": "Lokal sessiyadan çıxış (universitetin bütün sessiyalarını ləğv etmir)"
+      }
+    },
+    "/api/lectures/{lectureId}/syllabus": {
+      "get": {
+        "tags": [
+          "Məlumatlar"
+        ],
+        "responses": {
+          "401": {
+            "description": "Əvvəl giriş et."
+          },
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "JSON sillabus"
+          },
+          "404": {
+            "description": "Məlumat tapılmadı."
+          }
+        },
+        "summary": "Seçilən dərsin sillabusu",
+        "parameters": [
+          {
+            "in": "path",
+            "description": "Dərslər siyahısından alınan ID",
+            "example": 4287,
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "name": "lectureId"
+          }
+        ]
+      }
+    },
+    "/api/attendance": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "total_weeks, attended_weeks, absent_weeks, attendance_percent, attendance_score sahələri ilə fənn siyahısı",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Əvvəl giriş et."
+          }
+        },
+        "summary": "Öz fənlərin üzrə iştirak, qayıb, faiz və davamiyyət balı",
+        "tags": [
+          "Davamiyyət"
+        ]
+      }
+    },
+    "/api/lectures/{lectureId}/attendance": {
+      "get": {
+        "parameters": [
+          {
+            "example": 4287,
+            "in": "path",
+            "name": "lectureId",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "required": true
+          }
+        ],
+        "description": "Dərs ID-sini lectures siyahısından və ya attendance cavabındakı subject_group_id sahəsindən götür. Detallı cavabda yalnız giriş etmiş tələbənin qeydləri qaytarılır. status 1: iştirak edib, status 2: qayıb; digər/boş status qeyd olunmayıb.",
+        "summary": "Dərsin davamiyyət üzrə ümumi məlumatı",
+        "tags": [
+          "Davamiyyət"
+        ],
+        "responses": {
+          "401": {
+            "description": "Əvvəl giriş et."
+          },
+          "404": {
+            "description": "Məlumat tapılmadı."
+          },
+          "200": {
+            "description": "Davamiyyət məlumatları",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lectures/{lectureId}/attendance-detail": {
+      "get": {
+        "parameters": [
+          {
+            "example": 4287,
+            "in": "path",
+            "name": "lectureId",
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "required": true
+          }
+        ],
+        "description": "Dərs ID-sini lectures siyahısından və ya attendance cavabındakı subject_group_id sahəsindən götür. Detallı cavabda yalnız giriş etmiş tələbənin qeydləri qaytarılır. status 1: iştirak edib, status 2: qayıb; digər/boş status qeyd olunmayıb.",
+        "summary": "Yalnız öz tarixlər üzrə iştirak və qayıb qeydlərin",
+        "tags": [
+          "Davamiyyət"
+        ],
+        "responses": {
+          "401": {
+            "description": "Əvvəl giriş et."
+          },
+          "404": {
+            "description": "Məlumat tapılmadı."
+          },
+          "200": {
+            "description": "Davamiyyət məlumatları",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lectures/{lectureId}/tasks": {
+      "get": {
+        "tags": [
+          "Tapşırıqlar"
+        ],
+        "responses": {
+          "401": {
+            "description": "Giriş tələb olunur."
+          },
+          "200": {
+            "description": "tasks və task_summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Dərsin laboratoriya və seminar tapşırıqları",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "in": "path",
+            "name": "lectureId",
+            "example": 4287
+          }
+        ],
+        "description": "Əsas dərs ID-si ilə siyahını al. Hər tapşırıqda subject_group_id, local_detail_path və local_submit_path düzgün lab/seminar qrupunu göstərir."
+      }
+    },
+    "/api/lectures/{lectureId}/tasks/{taskId}": {
+      "get": {
+        "tags": [
+          "Tapşırıqlar"
+        ],
+        "responses": {
+          "401": {
+            "description": "Giriş tələb olunur."
+          },
+          "200": {
+            "description": "can_upload və student_files daxil olmaqla tapşırıq məlumatları",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Tapşırıq və fayl göndərmə icazəsi",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "in": "path",
+            "name": "lectureId",
+            "example": 4287,
+            "description": "Tapşırığın subject_group_id-si. Lab/seminar üçün əsas dərs ID-sindən fərqlənə bilər; siyahıdakı local_detail_path/local_submit_path yoluna bax."
+          },
+          {
+            "description": "tasks siyahısındakı tapşırıq ID-si",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "in": "path",
+            "name": "taskId"
+          }
+        ]
+      }
+    },
+    "/api/lectures/{lectureId}/tasks/{taskId}/submit": {
+      "post": {
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "properties": {
+                  "file": {
+                    "description": "Təhvil verəcəyin fayl",
+                    "format": "binary",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "summary": "Açıq tapşırığa öz faylını göndər",
+        "description": "Execute universitet LMS-inə real fayl göndərir. can_upload icazəsi serverdən yoxlanır. Bir fayl, yerli limit 20 MB; PDF/DOC/DOCX/PPT/PPTX. Mövcud faylı əvəz etmir. Vaxt aşımı olduqda təkrar göndərməzdən əvvəl tapşırıq detallarını yoxla.",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "in": "path",
+            "name": "lectureId",
+            "example": 4287,
+            "description": "Tapşırığın subject_group_id-si. Lab/seminar üçün əsas dərs ID-sindən fərqlənə bilər; siyahıdakı local_detail_path/local_submit_path yoluna bax."
+          },
+          {
+            "description": "tasks siyahısındakı tapşırıq ID-si",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "in": "path",
+            "name": "taskId"
+          },
+          {
+            "required": true,
+            "schema": {
+              "enum": [
+                "1"
+              ],
+              "default": "1",
+              "type": "string"
+            },
+            "in": "header",
+            "name": "X-AzTU-Local-Request"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Giriş tələb olunur."
+          },
+          "400": {
+            "description": "Fayl və ya forma qəbul edilmir."
+          },
+          "422": {
+            "description": "Universitet faylı qəbul etmədi."
+          },
+          "409": {
+            "description": "Tapşırıqda artıq fayl var; əvəz olunmadı."
+          },
+          "413": {
+            "description": "Ölçü limiti."
+          },
+          "200": {
+            "description": "Universitetin göndəriş cavabı",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "Vaxt aşımı: təkrar göndərməzdən əvvəl detalları yoxla."
+          },
+          "403": {
+            "description": "Fayl göndərmə icazəsi yoxdur."
+          }
+        },
+        "tags": [
+          "Tapşırıqlar"
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Tapşırıqlar"
+        ],
+        "summary": "Öz göndərdiyin faylı sil",
+        "description": "Universitetdəki real göndərişi silir. Əvvəl öz faylı serverdən yoxlanır. Müəllim faylı silinə bilməz.",
+        "parameters": [
+          {
+            "name": "lectureId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "file",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "student_files cavabındakı order"
+          },
+          {
+            "name": "X-AzTU-Local-Request",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1"
+              ],
+              "default": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fayl silindi"
+          },
+          "401": {
+            "description": "Giriş tələb olunur"
+          },
+          "403": {
+            "description": "İcazə verilmir"
+          },
+          "404": {
+            "description": "Öz göndərişində fayl tapılmadı"
+          }
+        }
+      }
+    }
+  }
+}
