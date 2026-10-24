@@ -1,5 +1,9 @@
 # AzTU LMS — Render yayım paketi
 
+Canlı sayt: https://aztu-kabinet.onrender.com
+
+Render xidməti: https://dashboard.render.com/web/srv-dbebc5i9lscs73ajc630
+
 Bu qovluq yalnız yayımlanacaq mənbəni saxlayır. Şifrə, token, test hesabı və lokal istifadəçi profili daxil edilməyib. Desktopdakı işlək lokal layihə dəyişdirilməyib.
 
 ## Render-də ilk yayım

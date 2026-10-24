@@ -95,7 +95,7 @@ if (!publicMode) app.UseSwaggerUI(options =>
     options.DocumentTitle = "AzTU LMS — Local Swagger";
     options.ConfigObject.PersistAuthorization = false;
 });
-app.MapGet("/", () => Results.File(Path.Combine(app.Environment.ContentRootPath, "wwwroot", "index.html"), "text/html"));
+app.MapMethods("/", new[] { "GET", "HEAD" }, () => Results.File(Path.Combine(app.Environment.ContentRootPath, "wwwroot", "index.html"), "text/html"));
 if (!publicMode) app.MapGet("/openapi.json", () => Results.Text(StudentFeatures.OpenApi(File.ReadAllText(Path.Combine(app.Environment.ContentRootPath, "openapi.json"))), "application/json"));
 app.MapGet("/health", () => Results.Ok(new { status = "ok", mode = publicMode ? "hosted" : "local", upstreamTested = false }));
 
