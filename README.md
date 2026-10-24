@@ -4,7 +4,7 @@ Canlı sayt: https://aztu-kabinet.onrender.com
 
 Render xidməti: https://dashboard.render.com/web/srv-dbebc5i9lscs73ajc630
 
-Bu qovluq yalnız yayımlanacaq mənbəni saxlayır. Şifrə, token, test hesabı və lokal istifadəçi profili daxil edilməyib. Desktopdakı işlək lokal layihə dəyişdirilməyib.
+Bu qovluq yalnız yayımlanacaq mənbəni saxlayır. Şifrə, token, test hesabı və lokal istifadəçi profili daxil edilməyib. Lokal və canlı versiyaların server konfiqurasiyaları ayrıca saxlanır.
 
 ## Render-də ilk yayım
 
@@ -26,7 +26,9 @@ Render → Settings → Custom Domains bölməsinə domeni əlavə et. Domen pro
 - Sessiya cookie-si HttpOnly, Secure, SameSite=Strict-dir. Swagger və OpenAPI publik rejimdə bağlıdır.
 - Giriş üçün bütün instance üzrə dəqiqədə 30 sorğu limiti var. İstifadəçi sayı artsa limit və paylanmış sessiya saxlanması ayrıca uyğunlaşdırılmalıdır.
 - Sessiyalar RAM-dadır və server restartında yenidən giriş lazımdır. Buna görə hazır paket tək instance üçündür.
-- Profil şəkli, tema və şəxsi cədvəl brauzer yaddaşındadır. Yeni domenə keçəndə əvvəlki localhost yaddaşı avtomatik köçmür.
+- Profil şəkli və tema brauzer yaddaşındadır. Yeni domenə keçəndə əvvəlki localhost yaddaşı avtomatik köçmür.
+- Dərs cədvəli 16.10.2026 tarixli 111 qrup cədvəlindən hazırlanıb. 19–25 oktyabr 2026 alt, 26 oktyabr–1 noyabr üst həftədir; həftələr bazar ertəsi növbələşir. Bakı vaxtı istifadə edilir.
+- `/api/timetable` qrupu sessiyanın universitetdən aldığı fənn adlarına əsasən müəyyən edir və yalnız həmin qrupun dərslərini qaytarır. Qrup parametri qəbul edilmir; müəyyən edilməyən və ya bərabər nəticəli qruplar üçün məlumat göstərilmir. Tam cədvəl `Data/` qovluğundadır və açıq fayl kimi təqdim edilmir.
 - Tapşırıq faylları universitetin API-sinə göndərilir; Render diskində daimi saxlanmır.
 - Render Free instance boş qalanda dayana bilər; sabit istifadə üçün always-on plan seçilir. Plan və domen ödənişi provayderdə ayrıca təsdiqlənir.
 

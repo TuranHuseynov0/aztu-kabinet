@@ -50,6 +50,7 @@ builder.Services.AddRateLimiter(options =>
 builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = LmsSession.MaxUploadBytes + 1_048_576);
 builder.Services.Configure<FormOptions>(options => options.MultipartBodyLengthLimit = LmsSession.MaxUploadBytes + 1_048_576);
 builder.Services.AddSingleton<SessionStore>();
+builder.Services.AddSingleton(new TimetableCatalog(File.ReadAllText(Path.Combine(builder.Environment.ContentRootPath, "Data", "timetable.json"))));
 var app = builder.Build();
 const string cookieName = "aztu_local_session";
 
@@ -197,6 +198,19 @@ app.MapGet("/api/lectures/{lectureId:int}/attendance-detail", (int lectureId, Ht
 app.MapGet("/api/lectures/{lectureId:int}/syllabus", (int lectureId, HttpContext ctx, SessionStore store) =>
     lectureId > 0 ? Forward($"lectures/{lectureId}/syllabus", ctx, store)
                   : Task.FromResult<IResult>(Results.Json(new { message = "Dərs ID-si müsbət olmalıdır." }, statusCode: 400)));
+app.MapGet("/api/timetable", async (HttpContext context, SessionStore store, TimetableCatalog catalog) =>
+{
+    var session = store.Find(context.Request.Cookies[cookieName]);
+    if (session is null) return Results.Json(new { message = "Əvvəl daxil ol." }, statusCode: 401);
+    if (context.Request.QueryString.HasValue)
+        return Results.Json(new { message = "Cədvəl yalnız öz hesabının qrupuna uyğun göstərilir." }, statusCode: 400);
+    var lectures = await session.GetAsync("lectures", context.RequestAborted);
+    if (!lectures.Success) return Results.Json(new { message = lectures.Message }, statusCode: lectures.StatusCode);
+    var own = catalog.ForLectures(lectures.Json!);
+    return own is null
+        ? Results.Json(new { message = "Hesabının qrupu üçün cədvəl müəyyən edilmədi." }, statusCode: 404)
+        : Results.Json(own);
+});
 StudentFeatures.Map(app, Forward);
 app.Run();
 
