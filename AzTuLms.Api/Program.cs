@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
-var configuredOrigin = builder.Configuration["PUBLIC_ORIGIN"]?.Trim().TrimEnd('/');
+var configuredOrigin = (builder.Configuration["PUBLIC_ORIGIN"] ?? builder.Configuration["RENDER_EXTERNAL_URL"])?.Trim().TrimEnd('/');
 var publicMode = !string.IsNullOrEmpty(configuredOrigin);
 Uri? publicUri = null;
 if (publicMode && (!Uri.TryCreate(configuredOrigin, UriKind.Absolute, out publicUri)
@@ -31,7 +31,7 @@ if (publicMode)
 else
 {
     if (!builder.Environment.IsDevelopment())
-        throw new InvalidOperationException("PUBLIC_ORIGIN is required outside local Development mode.");
+        throw new InvalidOperationException("PUBLIC_ORIGIN or Render external URL is required outside local Development mode.");
     allowedHosts.UnionWith(["127.0.0.1", "localhost"]);
     allowedOrigins.UnionWith(["http://127.0.0.1:5080", "http://localhost:5080"]);
     builder.WebHost.UseUrls("http://127.0.0.1:5080");

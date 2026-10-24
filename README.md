@@ -7,7 +7,7 @@ Bu qovluq yalnız yayımlanacaq mənbəni saxlayır. Şifrə, token, test hesab�
 1. Bu qovluğu şəxsi GitHub deposuna yerləşdir.
 2. Render: New → Web Service → həmin depo → Language: Docker.
 3. Dockerfile Path: `./Dockerfile`; Docker Build Context: `.`; Health Check Path: `/health`.
-4. Bir instance istifadə et. `PUBLIC_ORIGIN` dəyişəninə Render-in təyin etdiyi tam HTTPS ünvanını yaz: məsələn `https://your-service.onrender.com`. `PORT=8080` verilə bilər.
+4. Bir instance istifadə et. İlk yayımda Render-in `RENDER_EXTERNAL_URL` dəyişəni avtomatik götürülür; `PUBLIC_ORIGIN` yazmaq lazım deyil. Custom domen qoşulanda bu dəyişənə yeni HTTPS ünvanı yazılır. `PORT=8080` verilə bilər.
 5. Deploy et; əvvəl müvəqqəti ünvanda giriş, fənnlər, material endirmə və tapşırıq seçimini yoxla. Universitetin serverdən gələn giriş sorğularını qəbul etməsi real yayımda ayrıca yoxlanmalıdır.
 
 ## Domen
@@ -18,7 +18,7 @@ Render → Settings → Custom Domains bölməsinə domeni əlavə et. Domen pro
 
 ## İstismar
 
-- Production rejimində `PUBLIC_ORIGIN` olmadan server başlamır. Yalnız bu ünvanın brauzer Origin-i qəbul edilir; Render-in öz hostname-i də host yoxlamasında qəbul edilir.
+- Production rejimində `PUBLIC_ORIGIN` və ya Render-in avtomatik HTTPS ünvanı olmadan server başlamır. Yalnız bu ünvanın brauzer Origin-i qəbul edilir; Render-in öz hostname-i də host yoxlamasında qəbul edilir.
 - Sessiya cookie-si HttpOnly, Secure, SameSite=Strict-dir. Swagger və OpenAPI publik rejimdə bağlıdır.
 - Giriş üçün bütün instance üzrə dəqiqədə 30 sorğu limiti var. İstifadəçi sayı artsa limit və paylanmış sessiya saxlanması ayrıca uyğunlaşdırılmalıdır.
 - Sessiyalar RAM-dadır və server restartında yenidən giriş lazımdır. Buna görə hazır paket tək instance üçündür.
