@@ -137,6 +137,7 @@ app.MapPost("/auth/logout", (HttpContext context, SessionStore store) =>
 });
 app.MapGet("/api/lectures", (HttpContext ctx, SessionStore store) => Forward("lectures", ctx, store));
 app.MapGet("/api/user-info", (HttpContext ctx, SessionStore store) => Forward("user-info", ctx, store));
+app.MapGet("/api/profile", (HttpContext ctx, SessionStore store) => Forward("profile", ctx, store));
 app.MapGet("/api/lectures/{lectureId:int}/tasks", (int lectureId, HttpContext ctx, SessionStore store) =>
     lectureId > 0 ? Forward($"lectures/{lectureId}/tasks", ctx, store)
                   : Task.FromResult<IResult>(Results.Json(new { message = "Dərs ID-si müsbət olmalıdır." }, statusCode: 400)));

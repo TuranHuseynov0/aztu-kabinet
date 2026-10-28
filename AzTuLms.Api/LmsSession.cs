@@ -86,7 +86,7 @@ public sealed class LmsSession(HttpClient client) : IDisposable
         return new(true, (int)response.StatusCode, "", json);
     }
     public static bool IsAllowedRead(string path) =>
-        path is "lectures" or "user-info" or "attendance" or "tasks" or "scores" or "schedule"
+        path is "lectures" or "profile" or "user-info" or "attendance" or "tasks" or "scores" or "schedule"
             or "announcements" or "notifications" or "oral-exams" or "exam-results-all" or "exam-password"
         || System.Text.RegularExpressions.Regex.IsMatch(path,
             @"\A(?:lectures/[1-9][0-9]*/(?:syllabus(?:/plan\?method=[123]|/topic-file/[1-9][0-9]*)?|attendance|attendance-detail|scores|exam-results|tasks(?:/[1-9][0-9]*)?|materials(?:/[1-9][0-9]*)?)|(?:announcements|notifications)/[1-9][0-9]*(?:/data)?|scores/[A-Za-z0-9_-]{1,40}|exam-results/[1-9][0-9]*/questions|employees/[A-Za-z0-9_-]{1,80}|(?:search|search-all)\?q=(?:[A-Za-z0-9_.~-]|%[A-Fa-f0-9]{2}){1,1200}|/teacher-evaluation/(?:teachers|questions|my))\z");

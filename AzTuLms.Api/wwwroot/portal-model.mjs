@@ -25,7 +25,6 @@ export function successRows(data={}){
     ['Sərbəst iş',s.independent_work?.score,max.independent_work_score],
     ['Məşğələ',s.training?.score,max.training_score],
     ['Laboratoriya',s.laboratory?.score,max.laboratory_score],
-    ['Davamiyyət',s.attendance?.attendance_score,max.attendance_score],
     ['Ümumi bal',s.total_score,max.avarage_score]
   ].filter(([,value,limit])=>value!==undefined||limit!==undefined);
 }

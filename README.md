@@ -1,6 +1,10 @@
-# AzTU LMS — Render yayım paketi
+# AzTU LMS — şəxsi tələbə kabineti
 
-Canlı sayt: https://aztu-kabinet.onrender.com
+Cloudflare sayt: https://aztu-kabinet.aztu-kabinet-cloudflare.workers.dev
+
+Cloudflare mənbəsi və yayım qaydası: [cloudflare/README.md](cloudflare/README.md). Pulsuz Workers, statik fayllar və SQLite Durable Objects istifadə olunur. Ad-soyad və akademik məlumatlar universitetin `/api/profile` yolundan gəlir. Qayıb limitləri sillabus saatına əsaslanır; ayrıca davamiyyət balı göstərilmir. İmtahan şifrəsi profildə maskalanır və brauzer yaddaşında saxlanmır.
+
+Əvvəlki Render ünvanı: https://aztu-kabinet.onrender.com
 
 Render xidməti: https://dashboard.render.com/web/srv-dbebc5i9lscs73ajc630
 

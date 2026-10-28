@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {studentProfile,studentName,absenceLimit,ABSENCE_LIMITS} from '../AzTuLms.Api/wwwroot/student-model.mjs';
+import {successRows} from '../AzTuLms.Api/wwwroot/portal-model.mjs';
+import {readFileSync} from 'node:fs';
+for(const [hours,limit] of [[30,3],[45,5],[60,7],[75,9],[90,11],[105,13]])assert.equal(absenceLimit(String(hours),0).limit,limit);
+assert.equal(ABSENCE_LIMITS.size,6);
+assert.deepEqual(absenceLimit(60,3),{hours:60,limit:7,count:3,remaining:4,over:0});
+assert.equal(absenceLimit(60,7).remaining,0);assert.equal(absenceLimit(60,7).over,0);assert.equal(absenceLimit(60,8).over,1);
+assert.equal(absenceLimit(50,0).limit,null);assert.equal(absenceLimit(null,3).limit,null);assert.equal(absenceLimit(60,null).count,null);assert.equal(absenceLimit(60,-1).count,null);
+const remote={basicInfo:{name:'TEST',surname:'TƏLƏBƏ',fatherName:'ATA',gender:'K'},academicInfo:{course:'IV kurs',academic_group_name:'6223a1',status:'təhsil alır',registerType:'Dövlət sifarişli'}};
+assert.equal(studentName(remote),'TEST TƏLƏBƏ');assert.equal(studentProfile(remote).academic.course,'IV kurs');assert.equal(studentName({data:remote}),'TEST TƏLƏBƏ');assert.equal(studentName({}), '');
+const grades={students:[{scores:{training:{score:0},laboratory:{score:2},attendance:{attendance_score:9},total_score:2}}],score_set:{training_score:'20',laboratory_score:'10',attendance_score:'0',avarage_score:'50'}};
+const rows=successRows(grades);assert(!rows.some(([label])=>label==='Davamiyyət'));assert.deepEqual(rows.find(([label])=>label==='Məşğələ'),['Məşğələ',0,'20']);assert.equal(rows.at(-1)[1],2);
+const app=readFileSync(new URL('../AzTuLms.Api/wwwroot/app.mjs',import.meta.url),'utf8'),profile=readFileSync(new URL('../AzTuLms.Api/wwwroot/student-profile.mjs',import.meta.url),'utf8');
+assert(!app.includes('form.elements.bio'));assert(!app.includes('form.elements.name'));assert(!profile.includes('name="bio"'));assert(!profile.includes('Doğum tarixi'));assert(!profile.includes('Mobil telefon'));assert(profile.includes('type="password" readonly'));assert(!app.includes('Davamiyyət balı'));
+const portal=readFileSync(new URL('../AzTuLms.Api/wwwroot/portal.mjs',import.meta.url),'utf8');
+assert(portal.includes("[['attendance','journal'],['tasks','file'],['schedule','calendar'],['courses','book'],['oral','exam'],['exams','exam'],['profile','user']]"));
+console.log('PASS: all supplied absence limits, unknown values, limit boundaries, API names, current grades without attendance points, private exam UI and sidebar order.');

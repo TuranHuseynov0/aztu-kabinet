@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "aztu-kabinet",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-10-24",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/auth/*", "/health"]
+  },
+  "durable_objects": {
+    "bindings": [{"name": "SESSIONS", "class_name": "LmsSessionObject"}, {"name": "LOGIN_LIMITER", "class_name": "LoginLimiter"}]
+  },
+  "migrations": [{"tag": "v1", "new_sqlite_classes": ["LmsSessionObject", "LoginLimiter"]}],
+  "observability": {"enabled": false}
+}
