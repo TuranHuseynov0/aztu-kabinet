@@ -4,7 +4,7 @@ import {absenceLimit} from './student-model.mjs';
 
 export function createPortal(ctx){
   const {state,api,esc,icon,number,courseName,head,saveProfile}=ctx;
-  const pages={surveys:'Sorğular siyahısı',announcements:'Elanlar',profile:'Profil',transcript:'Transkript',schedule:'Dərs cədvəli',courses:'Fənnlər',tasks:'Tapşırıqlar',attendance:'Davamiyyət',oral:'Şifahi imtahanlar',exams:'Yazılı imtahanlar',course:'Fənn'};
+  const pages={themes:'Temalar',surveys:'Sorğular siyahısı',announcements:'Elanlar',profile:'Profil',transcript:'Transkript',schedule:'Dərs cədvəli',courses:'Fənnlər',tasks:'Tapşırıqlar',attendance:'Davamiyyət',oral:'Şifahi imtahanlar',exams:'Yazılı imtahanlar',course:'Fənn'};
   const navItems=[['attendance','journal'],['tasks','file'],['schedule','calendar'],['courses','book'],['oral','exam'],['exams','exam'],['profile','user']];
   const tabs=[['about','Dərs haqqında'],['materials','Dərs materialları'],['grading','Qiymətləndirmə'],['attendance','Davamiyyət'],['success','Cari müvəffəqiyyət'],['exams','İmtahan nəticəsi']];
   let courseNavOpen=true,courseId=null,courseTab='about',semester=null,scores=[];
